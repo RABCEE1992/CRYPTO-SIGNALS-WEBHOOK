@@ -1,4 +1,4 @@
-
+console.log('Function started at', new Date().toLocaleString()); // Startup log
 const express = require('express');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const axios = require('axios');
@@ -31,7 +31,7 @@ async function sendTelegramAlert(message) {
 }
 
 app.post('/webhook', async (req, res) => {
-  console.log('Webhook hit at', new Date().toLocaleString()); // Debug
+  console.log('Webhook hit at', new Date().toLocaleString());
   const events = req.body || [];
   let recentHits = [];
 
@@ -43,7 +43,7 @@ app.post('/webhook', async (req, res) => {
         try {
           const supplyInfo = await connection.getTokenSupply(mint);
           const totalSupply = parseFloat(supplyInfo.value.amount) / Math.pow(10, supplyInfo.value.decimals);
-          const transferAmount = parseFloat(transfer.tokenAmount.asDecimal) || (parseFloat(transfer.tokenAmount.amount) / Math.pow(10, transfer.tokenAmount.decimals) || 0);
+          const transferAmount = parseFloat(transfer.tokenAmount.asDecimal) or (parseFloat(transfer.tokenAmount.amount) / Math.pow(10, transfer.tokenAmount.decimals) || 0);
 
           const nativeTransfers = event.nativeTransfers || [];
           const isPureReceive = !nativeTransfers.some(nt => 
@@ -72,7 +72,7 @@ app.post('/webhook', async (req, res) => {
   res.status(200).send('OK');
 });
 
-// Global error handler to prevent crashes
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Global error:', err);
   res.status(500).send('Server Error');
