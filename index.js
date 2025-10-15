@@ -1,12 +1,13 @@
+console.log('Function started at 7:35 PM'); // Replace old listen
 const express = require('express');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-const connection = new Connection('https://mainnet.helius-rpc.com/?api-key=9a18ceb1-e9cb-40fa-befb-0f8d116eb7a8'); // Your Helius key
-const TELEGRAM_BOT_TOKEN = '8429257799:AAGSa3_Om8m2C12ogx-PqLNH3DyqmDad_fA'; // Your token
-const TELEGRAM_CHAT_ID = '584252358'; // Your chat ID
+const connection = new Connection('https://mainnet.helius-rpc.com/?api-key=9a18ceb1-e9cb-40fa-befb-0f8d116eb7a8');
+const TELEGRAM_BOT_TOKEN = '8429257799:AAGSa3_Om8m2C12ogx-PqLNH3DyqmDad_fA';
+const TELEGRAM_CHAT_ID = '584252358';
 const WATCHED_WALLETS = [
   '77YuVEQ7eb8z8NNMXFFWw9kMxvQAkY7jQZcL2GPF8G6F',
   'CBYYNm3cgcjdWgUYevX83v9fpEnWyJjgbdy57FE12pVA',
@@ -30,6 +31,7 @@ async function sendTelegramAlert(message) {
 }
 
 app.post('/webhook', async (req, res) => {
+  console.log('Webhook hit at', new Date().toLocaleString()); // Debug POST
   const events = req.body || [];
   let recentHits = [];
 
@@ -43,7 +45,6 @@ app.post('/webhook', async (req, res) => {
           const totalSupply = parseFloat(supplyInfo.value.amount) / Math.pow(10, supplyInfo.value.decimals);
           const transferAmount = parseFloat(transfer.tokenAmount.asDecimal) || (parseFloat(transfer.tokenAmount.amount) / Math.pow(10, transfer.tokenAmount.decimals) || 0);
 
-          // Pure receive check: No SOL outflow from watched wallet
           const nativeTransfers = event.nativeTransfers || [];
           const isPureReceive = !nativeTransfers.some(nt => 
             nt.fromUserAccount === transfer.toUserAccount && parseFloat(nt.tokenAmount.asDecimal) > 0
@@ -70,6 +71,3 @@ app.post('/webhook', async (req, res) => {
   }
   res.status(200).send('OK');
 });
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Signals live on port ${port}`));
