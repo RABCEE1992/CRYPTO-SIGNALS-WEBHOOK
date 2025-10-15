@@ -1,4 +1,4 @@
-console.log('Function started at', new Date().toLocaleString()); // Startup log
+console.log('Function started at', new Date().toLocaleString());
 const express = require('express');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const axios = require('axios');
@@ -43,7 +43,7 @@ app.post('/webhook', async (req, res) => {
         try {
           const supplyInfo = await connection.getTokenSupply(mint);
           const totalSupply = parseFloat(supplyInfo.value.amount) / Math.pow(10, supplyInfo.value.decimals);
-          const transferAmount = parseFloat(transfer.tokenAmount.asDecimal) or (parseFloat(transfer.tokenAmount.amount) / Math.pow(10, transfer.tokenAmount.decimals) || 0);
+          const transferAmount = parseFloat(transfer.tokenAmount.asDecimal) || (parseFloat(transfer.tokenAmount.amount) / Math.pow(10, transfer.tokenAmount.decimals) || 0);
 
           const nativeTransfers = event.nativeTransfers || [];
           const isPureReceive = !nativeTransfers.some(nt => 
@@ -58,7 +58,7 @@ app.post('/webhook', async (req, res) => {
                             `*CA:* \`${transfer.mint}\`\n` +
                             `*Amount:* ${transferAmount.toFixed(0)} tokens (${((transferAmount / totalSupply) * 100).toFixed(1)}% supply)\n` +
                             `*Cabal:* ${cabalCount > 1 ? `${cabalCount} wallets hit` : 'Solo'}\n` +
-                            `*Tx:* [View on Solscan](https://solscan.io/tx/${event.signature})\n` +
+                            `*Tx:* [View on Solscan](https://solscan.io/tx${event.signature})\n` +
                             `*Time:* ${new Date().toLocaleString()}\n\n` +
                             `Vet: Birdeye/RugCheck for meta fit.`;
             await sendTelegramAlert(alertMsg);
@@ -78,4 +78,4 @@ app.use((err, req, res, next) => {
   res.status(500).send('Server Error');
 });
 
-module.exports = app; // Export for Vercel serverless
+module.exports = app; // Export for Vercel
