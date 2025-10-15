@@ -1,4 +1,3 @@
-console.log('Function started at 7:35 PM'); // Replace old listen
 const express = require('express');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const axios = require('axios');
@@ -10,12 +9,7 @@ const TELEGRAM_BOT_TOKEN = '8429257799:AAGSa3_Om8m2C12ogx-PqLNH3DyqmDad_fA';
 const TELEGRAM_CHAT_ID = '584252358';
 const WATCHED_WALLETS = [
   '77YuVEQ7eb8z8NNMXFFWw9kMxvQAkY7jQZcL2GPF8G6F',
-  'CBYYNm3cgcjdWgUYevX83v9fpEnWyJjgbdy57FE12pVA',
-  '3H4GRCwM7Vuqbss84JDENECskVMzHx8LMNbwDh9j2PWJ',
-  'EHg5YkU2SZBTvuT87rUsvxArGp3HLeye1fXaSDfuMyaf',
-  '4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t',
-  '6QSc2CxSdkUQSXttkceR9yMuxMf36L75fS8624wJ9tXv',
-  'cGxeYN6F7T9aELwjLPeL3hnJNscGU7EHg5CEsP4B3Hz'
+  'CBYYNm3cgcjdWgUYevX83v9fpEnWyJjgbdy57FE12pVA'
 ];
 
 async function sendTelegramAlert(message) {
@@ -31,7 +25,7 @@ async function sendTelegramAlert(message) {
 }
 
 app.post('/webhook', async (req, res) => {
-  console.log('Webhook hit at', new Date().toLocaleString()); // Debug POST
+  console.log('Webhook hit at', new Date().toLocaleString()); // Debug
   const events = req.body || [];
   let recentHits = [];
 
@@ -71,3 +65,11 @@ app.post('/webhook', async (req, res) => {
   }
   res.status(200).send('OK');
 });
+
+// Global error handler to prevent crashes
+app.use((err, req, res, next) => {
+  console.error('Global error:', err);
+  res.status(500).send('Server Error');
+});
+
+module.exports = app; // Export for Vercel serverless
