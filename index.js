@@ -25,6 +25,7 @@ async function sendTelegramAlert(message) {
       text: message,
       parse_mode: 'Markdown'
     });
+    console.log('Alert sent successfully');
   } catch (err) {
     console.log('Telegram error:', err);
   }
@@ -58,7 +59,7 @@ app.post('/webhook', async (req, res) => {
                             `*CA:* \`${transfer.mint}\`\n` +
                             `*Amount:* ${transferAmount.toFixed(0)} tokens (${((transferAmount / totalSupply) * 100).toFixed(1)}% supply)\n` +
                             `*Cabal:* ${cabalCount > 1 ? `${cabalCount} wallets hit` : 'Solo'}\n` +
-                            `*Tx:* [View on Solscan](https://solscan.io/tx${event.signature})\n` +
+                            `*Tx:* [View on Solscan](https://solscan.io/tx/${event.signature})\n` +
                             `*Time:* ${new Date().toLocaleString()}\n\n` +
                             `Vet: Birdeye/RugCheck for meta fit.`;
             await sendTelegramAlert(alertMsg);
